@@ -131,7 +131,7 @@ tags: Redis
 
 这样无论如何启动，都将（在配置文件指定正确的前提下）读取/etc/redis/appendonly.aof文件。  
 
-记录一些常用的命令：  
+###记录一些常用的命令：  
 
 > redis-server /etc/redis/6379.conf &   // 指定配置文件方式在后台启动Redis服务器   
 > redis-cli                             // 启动客户端，默认连接127.0.0.1:6379   
