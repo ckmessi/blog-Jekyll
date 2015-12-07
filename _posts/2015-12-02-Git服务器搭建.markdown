@@ -1,0 +1,79 @@
+---
+layout: post
+title:  "Git服务器搭建"
+date:   2015-12-02 21:54:00
+categories: coding
+tags: Git
+---
+
+##Git服务器的搭建
+
+####一、Git服务器环境配置
+
+1.1 安装  
+    在Git的官网 http://git-scm.com/download/linux 可以看到安装方法。  
+    我们使用yum的方法，在Shell中输入：
+
+> yum install git
+
+即可一键安装完成。  
+
+1.2 其它配置  
+    
+
+* 新建 git 用户  
+    运行adduser git，自动创建了/home/git目录
+
+* 添加公钥
+    在git用户的.ssh目录下，即/home/git/.ssh目录下，新建文件authorized_keys，在文件中添加客户端发来的公钥。  
+    客户端在自己的.ssh目录下查找*.pub文件，如果没有则运行ssh-keygen生成。  
+
+* 清除git用户的权限    
+        用vim打开/etc/passwd文件     
+        将git用户那一行最后的/usr/bash替换成git-shell所在位置，即/usr/bin/git-shell    
+        如果不知道可以使用 whereis git-shell 查找git-shell所在位置   
+
+####二、Git基本使用测试
+   
+   Git的使用测试流程：分三个区域：1. 服务器目录；2. 客户端1；3. 客户端2  
+   我们假设将服务器目录和客户端2目录放在服务器某处，客户端放在自己电脑某处。
+
+2.1 基本流程
+
+* 服务器仓库  
+    服务器上新建一个目录，比如/home/Lionel/git  
+    在目录下新建一个文件夹：mkdir test_app.git  
+    进入文件夹内，输入命令：git --bare init  
+    这样就完成了服务器仓库的建立   
+
+* 建立远程仓库1  
+    在自己的电脑上，在任何一个希望工程目录所在的目录下，比如/home/Lionel/Code/下，执行：git clone git@server:/home/Lionel/git/test_app.git  
+    这样会出现一个test_app目录，里面是有git环境的。  
+
+* 建立远程仓库2  
+    在服务器目录/home/Lionel/git下，新建文件夹：mkidr test_app.client  
+    进入文件夹，输入命令git clone git@server:/home/Lionel/git/test_app.git（注意也要添加服务器自己的公钥）  
+    这样在文件夹内，会多出一个test_app目录，里面有git环境的。  
+
+* 现在远程仓库1和远程仓库2可以通信了。    
+    在远程仓库1下  
+    新建文件t.txt，输入"Hello, world"  
+    执行命令：git add *  
+    执行命令：git commit -a -m "first commit"  
+    执行命令：git push  
+
+    在远程仓库2下  
+    执行命令：git pull  
+    就能看到t.txt文件了。  
+
+    Done
+
+* * * 
+
+记录过程中遇到的一些坑：  
+git服务器的.ssh目录必须权限是700，否则虽然添加了公钥，但还是提示输入密码。有了具体的错误信息，再次求助于Google, 原来我把 .ssh目录的权限设置成了775 （当时认为权限越宽松越不会有问题,哎)   
+
+而系统安全方面，对于这个存放公钥的目录的权限要求是只有本人才可以读写的，应该是700！否则，缺省的情况下会拒绝进行authentication. 改成700后，再次SSH登录，问题解决！
+
+参考 http://www.androiddev.net/ssh-public-key-authentication-error/
+

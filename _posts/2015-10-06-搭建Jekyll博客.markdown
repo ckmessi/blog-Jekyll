@@ -1,0 +1,8 @@
+---
+layout: post
+title:  "搭建Jekyll博客"
+date:   2015-10-06 12:24:00
+categories: default
+---
+
+为何建一个个人博客这么麻烦呢？

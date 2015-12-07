@@ -1,0 +1,146 @@
+---
+layout: post
+title:  "Redis持久化存储&开机自动启动"
+date:   2015-12-07 22:52:00
+categories: coding
+tags: Redis
+---
+
+本篇笔记内容的环境为Linux Ubuntu 14.4系统。
+
+##Redis持久化存储配置
+
+根据博客 http://huangyunbin.iteye.com/blog/1894583 的指导，Redis的aof机制可以实现每次操作都持久化。  
+找到Redis的配置文件，在Redis安装目录的根目录下。通常默认的安装目录可能是 /user/local/etc/redis-2.8.3/redis.conf  
+打开redis.conf文件，查找"appendonly"，将其配置值由"no"修改为"yes"。  
+
+> appendonly yes  
+
+再查找"appendfsync"，其中从上到下三行分别表示”每次写命令都强制写入磁盘”、“每秒强制写入磁盘”、“完全不写入磁盘”。  
+如果选择最上面的选项，能够保证完全持久化，但速度最慢，不推荐；采用中间策略，保证Redis最多只丢失最近1秒内写入的数据。  
+按照配置文件的默认设置即可，不用修改。  
+
+> \# appendfsync always  
+> appendsync everysec  
+> \# appendsync no  
+
+另外网上大多数博客没有提到的，查找"dir "（注意dir后面有空格）。  
+这表示的是保存数据的aof文件所存放的目录。  
+如果按照当前默认值"./"，将导致一个问题：在不同位置启动redis-server，将读取不同的持久化数据文件。这对于后续需要开机自动启动，潜在地可能造成一些问题。  
+
+> dir ./  
+
+在后续内容中，我会将其修改为某个绝对路径，确保每次启动Redis服务器时，只要配置文件一致，读取的aof文件也一致。  
+
+至此，Redis持久化存储配置完成。  
+需要注意的是，此后启动Redis服务器时，需要注意配置文件信息，如果仅仅下述命令，将读取默认的配置文件。  
+
+> redis-server  
+
+始终读取默认的配置文件是不可靠的，这对于后续开机启动过程中可能会存在问题。我们采用指定配置文件启动的方式，其中"6379.conf"是指定的配置文件。  
+
+> redis-server /etc/redis/6379.conf
+
+只要按照上述配置启动Redis服务器，可以使Redis每秒向磁盘写入最新的存储信息，保证在系统宕机后丢失的数据在1秒之内。
+
+至此，Redis持久化存储的配置完成。
+
+##Redis开机自动启动设置
+
+结合博客 http://www.tuicool.com/articles/aQbQ3u 的指导，我们尝试让Redis成为系统的开机启动项。  
+推荐使用启动脚本的方式启动Redis服务，启动脚本redis_init_script已经位于Redis的安装目录中，位于/utils/目录下。  
+打开脚本，我们可以看到下面信息：  
+
+> REDISPORT=6379  
+> \#服务端所处位置，在make install后默认存放与`/usr/local/bin/redis-server`，如果未make install则需要修改该路径，下同。  
+> EXEC=/usr/local/bin/redis-server
+> \#客户端位置  
+> CLIEXEC=/usr/local/bin/redis-cli
+> \#Redis的PID文件位置  
+> PIDFILE=/var/run/redis_${REDISPORT}.pid  
+> \#配置文件位置，需要修改  
+> CONF="/etc/redis/${REDISPORT}.conf"
+
+其中指定了Redis服务器启动位置，客户端位置，端口号、PID文件位置、配置文件位置等信息。
+大多数配置信息默认可用，我们需要注意的是最后一项配置文件路径，这里放置在了"/etc/redis/${REDISPORT}.conf"位置，不再是默认的配置文件路径，需要注意。  
+
+下面开始操作：  
+1.根据启动脚本要求，复制一份配置文件，以端口号命名：  
+
+> mkdir /etc/redis   
+> cp redis.con /etc/redis/6379.conf
+
+2.将启动脚本redis_init_script复印一份到/etc/init.d目录下，将启动脚本命名为redisd（通常以d结尾表示后台自启动服务）  
+
+> cp utils/redis_init_script /etc/init.d/redisd
+
+3.设置开机启动  
+这里原博客教程中使用chkconfig命令，但ubuntu系统中没有这个命令，我们使用update-rc.d命令，执行：  
+﻿
+> update-rc.d redisd defaults  
+
+系统会自动将redisd这个启动脚本的信息，添加到启动项中：  
+
+> root@iZ25pab7bpeZ:/usr/sbin# update-rc.d redisd defaults  
+> perl: warning: Setting locale failed.  
+> perl: warning: Please check that your locale settings:  
+>    LANGUAGE = "en_US:",      
+>    LC_ALL = (unset),    
+>    LC_CTYPE = "zh_CN.UTF-8",    
+>    LANG = "en_US.UTF-8"    
+>    are supported and installed on your system.    
+> perl: warning: Falling back to the standard locale ("C").    
+> update-rc.d: warning: /etc/init.d/redisd missing LSB information    
+> update-rc.d: see <http://wiki.debian.org/LSBInitScripts>    
+>  Adding system startup for /etc/init.d/redisd ...    
+>    /etc/rc0.d/K20redisd -> ../init.d/redisd    
+>    /etc/rc1.d/K20redisd -> ../init.d/redisd    
+>    /etc/rc6.d/K20redisd -> ../init.d/redisd    
+>    /etc/rc2.d/S20redisd -> ../init.d/redisd    
+>    /etc/rc3.d/S20redisd -> ../init.d/redisd    
+>    /etc/rc4.d/S20redisd -> ../init.d/redisd    
+>    /etc/rc5.d/S20redisd -> ../init.d/redisd    
+
+此时进入目录/etc/rc2.d，可以看到文件"S20redisd"，链接指向/etc/init.d/redisd，S表示会启动。
+完成后执行命令：  
+
+> reboot
+
+重启操作系统。
+
+到此Redis的开机自动启动配置完成。
+
+###遇到的一些问题
+
+1.手动启动服务器中数据不一致。  
+当时遇到的问题，主要是读取配置文件的问题。  
+
+> redis-server & /etc/redis/6379.conf  
+> redis-server /etc/redis/6379.conf & 
+
+上述两句命令是不同的，为了让redis-server在后台运行，我使用了&符号，但是前者可能导致配置文件指定失败！
+
+2.开机启动和手动启动，服务器中数据不一致。  
+这里主要是配置文件中"dir"配置项的设置，由于默认是设置为"./"，即当前启动目录，因此会出现下面的情况：  
+开机自动启动的redis-server，将持久化数据保存在了磁盘根目录"/"下，有一个"appendonly.aof"文件；  
+手动启动，如果是在Home目录下启动，将读取目录"~/"下的"appendonly.  aof"文件；  
+从而导致两种启动所读取的持久化数据不一致。  
+我在配置文件中将配置项修改为：  
+
+> dir /etc/redis/
+
+这样无论如何启动，都将（在配置文件指定正确的前提下）读取/etc/redis/appendonly.aof文件。  
+
+记录一些常用的命令：  
+
+> redis-server /etc/redis/6379.conf &   // 指定配置文件方式在后台启动Redis服务器   
+> redis-cli                             // 启动客户端，默认连接127.0.0.1:6379   
+> redis-cli shutdown                    // 通过客户端关闭Redis服务器   
+
+在客户端中的命令：
+
+> keys *                  // 查看当前所有键值   
+> info                    // 查看Redis服务器信息   
+> ocnfig get appendonly   // 查看配置信息appendonly的值   
+
+
