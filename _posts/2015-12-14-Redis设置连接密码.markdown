@@ -1,0 +1,55 @@
+---
+layout: post
+title:  "Redis设置连接密码"
+date:   2015-12-14 17:17:00
+categories: coding
+tags: Redis
+---
+
+本篇笔记内容的环境为Linux Ubuntu 14.4系统。
+
+##Redis设置连接密码
+
+Redis设置密码的主要方式就是修改配置文件。
+
+###**修改配置**
+在配置文件redis.conf中查找关键字“requirepass”：
+
+>\#requirepass foobared  
+
+将注释取消，其修改为自己的密码，比如：
+
+>requirepass myPassword
+
+###**生效**
+接下来有两种方式让配置生效：  
+（1）重启Redis  
+
+重新启动Redis服务器，指定配置文件，自然生效  
+
+（2）使用客户端连接Redis服务器，输入命令：
+
+>config set requirepass myPassword
+
+这实质上是通过动态修改配置来达到目的。
+
+此时再次查询会出现
+
+>redis 127.0.0.1:6379> config get requirepass  
+>(error) ERR operation not permitted  
+
+认证失败的情况。现在只需要进行认证即可
+
+> auth myPassword
+
+###**连接方法**
+登录有密码要求的Redis服务器：  
+
+（1）在登录时使用参数"-a"
+
+>redis-cli -a myPassword
+
+（2）登录之后，使用命令"auth"：
+
+>auth myPassword
+
