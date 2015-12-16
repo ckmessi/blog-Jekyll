@@ -11,7 +11,8 @@ tags: Redis
 ##Redis持久化存储配置
 
 根据博客 http://huangyunbin.iteye.com/blog/1894583 的指导，Redis的aof机制可以实现每次操作都持久化。  
-找到Redis的配置文件，在Redis安装目录的根目录下。通常默认的安装目录可能是 /user/local/etc/redis-2.8.3/redis.conf  
+找到Redis的配置文件，在Redis安装目录的根目录下。  
+通常默认的安装目录可能是 /user/local/etc/redis-2.8.3/redis.conf  
 打开redis.conf文件，查找"appendonly"，将其配置值由"no"修改为"yes"。  
 
 > appendonly yes  
