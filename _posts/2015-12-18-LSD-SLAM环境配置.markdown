@@ -1,0 +1,158 @@
+---
+layout: post
+title:  "LSD-SLAM环境配置"
+date:   2015-12-18 21:46:00
+categories: coding
+tags: SLAM
+---
+
+操作系统：Ubuntu14.04    
+使用命令 cat /etc/issue 可以查看当前操作系统版本号，如下：
+
+>chenkai@ubuntu:~$ cat /etc/issue     
+>Ubuntu 14.04.1 LTS \n \l
+
+下面正式开始配置。
+
+##第一部分
+
+参考 http://wiki.ros.org/indigo/Installation/Ubuntu#indigo.2BAC8-Installation.2BAC8-Sources.Setup_your_sources.list
+
+####1.设置source.list，将计算机配置为接受来自packages.ros.org的软件，ROS Indigo只支持Saucy (13.10) and Trusty (14.04)，对于Debian包而言。  
+（Setup your computer to accept software from packages.ros.org. ROS Indigo ONLY supports Saucy (13.10) and Trusty (14.04) for debian packages.）
+
+
+>sudo sh -c 'echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list'
+
+####2.安装Keys
+
+>sudo apt-key adv --keyserver hkp://pool.sks-keyservers.net --recv-key 0xB01FA116
+
+####3.首先确保当前Debian包的索引是最新的。
+（ make sure your Debian package index is up-to-date:）
+
+>sudo apt-get update
+
+####4.推荐以Desktop-Full的方式安装
+（Desktop-Full Install: (Recommended) : ROS, rqt, rviz, robot-generic libraries, 2D/3D simulators, navigation and 2D/3D perception）
+
+>sudo apt-get install ros-indigo-desktop-full
+
+此时可以使用命令 apt-cache search ros-indigo查看可用的包（反正都看不懂，感觉并没有什么用）。
+
+####5. 初始化rosdep（Initialize rosdep）
+在使用ROS之前，需要初始化rosdep，rosdep能够使用你轻松地安装你希望编译的源码的系统依赖，并且运行一些ROS的核心组件。
+（Before you can use ROS, you will need to initialize rosdep. rosdep enables you to easily install system dependencies for source you want to compile and is required to run some core components in ROS.）
+
+>sudo rosdep init
+>rosdep update
+
+将得到下面的情况：
+
+```
+chenkai@ubuntu:~$ sudo rosdep init
+[sudo] password for chenkai: 
+Wrote /etc/ros/rosdep/sources.list.d/20-default.list
+Recommended: please run
+    rosdep update
+chenkai@ubuntu:~$ rosdep update
+reading in sources list data from /etc/ros/rosdep/sources.list.d
+Hit https://raw.githubusercontent.com/ros/rosdistro/master/rosdep/osx-homebrew.yaml
+Hit https://raw.githubusercontent.com/ros/rosdistro/master/rosdep/base.yaml
+Hit https://raw.githubusercontent.com/ros/rosdistro/master/rosdep/python.yaml
+Hit https://raw.githubusercontent.com/ros/rosdistro/master/rosdep/ruby.yaml
+Hit https://raw.githubusercontent.com/ros/rosdistro/master/releases/fuerte.yaml
+Query rosdistro index https://raw.githubusercontent.com/ros/rosdistro/master/index.yaml
+Add distro "groovy"
+Add distro "hydro"
+Add distro "indigo"
+Add distro "jade"
+updated cache in /home/chenkai/.ros/rosdep/sources.cache
+chenkai@ubuntu:~$ 
+```
+
+####6.环境安装
+
+如果每次新的Shell启动时，ROS环境变量都自动添加到你的bash session里，这是很方便的。
+（It's convenient if the ROS environment variables are automatically added to your bash session every time a new shell is launched:）
+
+>echo "source /opt/ros/indigo/setup.bash" >> ~/.bashrc
+>source ~/.bashrc
+
+【可选】如果仅仅希望改变当前Shell的环境，可以输入
+（If you just want to change the environment of your current shell, you can type:）
+
+>source /opt/ros/indigo/setup.bash
+
+【可选】如果使用的是zsh，可以输入
+（If you use zsh instead of bash you need to run the following commands to set up your shell:）
+
+>echo "source /opt/ros/indigo/setup.zsh" >> ~/.zshrc
+>source ~/.zshrc
+
+####7.获取rosinstall
+rosinstall是ROS中最频繁使用的命令行工作，是单独分布式发布的。这使得你能够使用一行命令，轻松地下载ROS包的源码树。
+（rosinstall is a frequently used command-line tool in ROS that is distributed separately. It enables you to easily download many source trees for ROS packages with one command. ）
+为了安装rosintsall，运行：
+（To install this tool on Ubuntu, run）
+
+>sudo apt-get install python-rosinstall
+
+##第二部分
+（参考 https://github.com/tum-vision/lsd_slam ）
+
+####1.根据2.2 ROS indigo + Ubuntu 14.04教程，创建rosbuild workspace。
+
+>sudo apt-get install python-rosinstall
+>mkdir ~/rosbuild_ws
+>cd ~/rosbuild_ws
+>rosws init . /opt/ros/indigo
+>mkdir package_dir
+>rosws set ~/rosbuild_ws/package_dir -t .
+>echo "source ~/rosbuild_ws/setup.bash" >> ~/.bashrc
+>bash
+>cd package_dir
+
+####2.安装系统依赖
+
+>sudo apt-get install ros-indigo-libg2o ros-indigo-cv-bridge liblapack-dev libblas-dev freeglut3-dev libqglviewer-dev libsuitesparse-dev libx11-dev
+
+####3.在当前ROS package目录，克隆lsd-slam源码
+
+>git clone https://github.com/tum-vision/lsd_slam.git lsd_slam
+
+####4.编译源码（需要等待较长时间，约15min）
+
+>rosmake lsd_slam
+
+##第三部分
+
+首先将LSD-SLAM的示例数据LSD_room.bag.zip拷贝到目录~/下，并解压缩。
+然后依次运行下面四条指令：
+
+####1. 启动ROS核心服务器：
+
+>roscore
+
+如果没有启动ROS服务器，在执行下面语句时都将出来下面错误：Failed to contact master at [localhost:11311]
+
+####2.启动lsd_slam viewer
+
+>rosrun lsd_slam_viewer viewer
+
+####3.启动lsd_slam main ros node:
+
+>rosrun lsd_slam_core live_slam image:=/image_raw camera_info:=/camera_info
+
+####4.播放序列
+
+>rosbag play ~/LSD_room.bag
+
+然后就可以在窗口中看到构建三维点的可视化信息了。
+
+
+##The End
+
+
+
+
