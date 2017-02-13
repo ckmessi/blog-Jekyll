@@ -2,7 +2,8 @@
 layout: post
 title:  "LeetCode 41: First Missing Positive"
 date:   2015-10-06 20:41:00
-categories: coding
+categories: LeetCode
+tags: [LeetCode, Array]
 ---
 
 ##LeetCode 41: First Missing Positive

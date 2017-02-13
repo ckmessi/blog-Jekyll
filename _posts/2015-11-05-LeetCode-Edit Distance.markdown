@@ -2,8 +2,8 @@
 layout: post
 title:  "LeetCode 72: Edit Distance"
 date:   2015-11-05 22:12:00
-categories: coding
-tags: Dynamic Programming
+categories: LeetCode
+tags: [LeetCode, Dynamic Programming]
 ---
 
 经典的动态规划问题：编辑距离。

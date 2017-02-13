@@ -2,8 +2,8 @@
 layout: post
 title:  "LeetCode 204: Count Primes"
 date:   2015-10-28 21:08:00
-categories: coding
-tags: Math
+categories: LeetCode
+tags: [LeetCode, Math]
 ---
 
 这是一道标准的与质数相关的题目，需要好好记住几种递进的方法。

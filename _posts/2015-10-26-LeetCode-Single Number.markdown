@@ -2,7 +2,8 @@
 layout: post
 title:  "LeetCode: Single Number系列"
 date:   2015-10-26 21:30:00
-categories: coding
+categories: LeetCode
+tags: [LeetCode, Bit]
 ---
 
 LeetCode中有三道Single Number系列题目，都挺巧妙地使用到位运算的相关知识。

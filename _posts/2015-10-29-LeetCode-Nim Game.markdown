@@ -2,8 +2,8 @@
 layout: post
 title:  "LeetCode 292: Nim Game"
 date:   2015-10-29 21:07:00
-categories: coding
-tags: simple
+categories: LeetCode
+tags: [LeetCode, Simple]
 ---
 
 我从未见过如此水的题目！

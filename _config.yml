@@ -2,7 +2,7 @@
 title: Lionel's blog
 email: ckmessi@163.com
 description: > # this means to ignore newlines until "baseurl:"
-  copyright@Lionel 2015
+  Copyright©2017 by ckmessi. All rights reserved.
 baseurl: "/blog-jekyll" # the subpath of your site, e.g. /blog/
 url: "http://github.ckmessi.io" # the base hostname & protocol for your site
 github_username:  ckmessi

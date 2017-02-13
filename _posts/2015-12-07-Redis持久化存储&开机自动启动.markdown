@@ -2,8 +2,8 @@
 layout: post
 title:  "Redis持久化存储&开机自动启动"
 date:   2015-12-07 22:52:00
-categories: coding
-tags: Redis
+categories: Others
+tags: [Redis]
 ---
 
 本篇笔记内容的环境为Linux Ubuntu 14.4系统。

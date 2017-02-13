@@ -2,8 +2,8 @@
 layout: post
 title:  "LeetCode 233: Number of Digit One"
 date:   2015-11-03 21:19:00
-categories: coding
-tags: Math
+categories: LeetCode
+tags: [LeetCode, Math]
 ---
 
 计算0~n的数中，一共出现了多少个1。  

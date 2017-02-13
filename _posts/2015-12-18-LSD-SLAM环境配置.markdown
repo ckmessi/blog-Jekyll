@@ -2,8 +2,8 @@
 layout: post
 title:  "LSD-SLAM环境配置"
 date:   2015-12-18 21:46:00
-categories: coding
-tags: SLAM
+categories: Others
+tags: [SLAM]
 ---
 
 操作系统：Ubuntu14.04    

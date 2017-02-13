@@ -1,0 +1,96 @@
+---
+layout: post
+title:  "Github项目导入基本流程"
+date:   2016-01-14 21:17:00
+categories: Others
+tags: [Git]
+---
+
+##Github项目导入  
+
+与普通Git使用类似，现在使用Github作为远程仓库，基本方法及流程如下：    
+
+### 一、设置与Github的连接  
+
+- 0.生成密钥  
+```
+ssh-keygen -t rsa  
+```
+
+- 1.添加到github的账户信任ssh key中
+
+    在Github页面打开`setting`，找到ssh相关的部分，将id_rsa.pub中的内容复杂添加。
+
+- 2.测试  
+
+    使用下面命令测试连接
+```
+ssh -T git@github.com
+```
+
+### 二、Github仓库准备
+
+- 3.在Github上创建项目
+
+    创建新的Repository，名称设置为ros_faster_rcnn。
+
+### 三、本地项目准备
+
+- 4.使用ROS创建package
+```
+roscreate-pkg ros_faster_rcnn
+```
+
+### 四、开始添加
+
+- 5.初始化本地仓库
+
+    在项目中执行初始化命令    
+```
+git init    
+```
+
+    配置git选项，执行    
+```
+git--global config user.name "ckmessit"  
+git --global config user.email "ckmessi@163.com"    
+```
+
+- 6.添加远程仓库  
+    执行命令：    
+```
+git remote add origin git@github.com:[account_name]/[repository.git]
+```     
+    比如：    
+```
+git remote add origin git@github.com:ckmessi/ros_faster_rcnn.git
+```  
+    
+    （这里要注意，就是要使用`git@github.com:[account_name]`，不能使用普通的github地址`https://github.com/[account_name]`
+
+- 7.项目初始化    
+    添加相关文件，执行      
+```
+git add .
+```   
+
+    执行commit命令：     
+```
+commit：git commit -a -m "initial repository"
+```
+
+    执行pull命令：    
+```  
+git pull origin master
+```  
+（直接git push origin matser应该会报错）   
+
+    执行push命令：  
+```
+git push origin master
+```
+    
+### 五、结束
+
+至此在网页上查看github的目录，应该已经有新的文件添加进来了。  
+The End.

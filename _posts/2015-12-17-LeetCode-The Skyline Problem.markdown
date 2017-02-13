@@ -2,8 +2,8 @@
 layout: post
 title:  "LeetCode 218: The Skyline Problem"
 date:   2015-12-17 21:37:00
-categories: coding
-tags: [LeetCode, DataStructure]
+categories: LeetCode
+tags: [LeetCode, Data Structure]
 ---
 
 ###天际线问题

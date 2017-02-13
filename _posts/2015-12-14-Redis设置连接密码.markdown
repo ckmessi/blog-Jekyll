@@ -2,8 +2,8 @@
 layout: post
 title:  "Redis设置连接密码"
 date:   2015-12-14 17:17:00
-categories: coding
-tags: Redis
+categories: Others
+tags: [Redis]
 ---
 
 本篇笔记内容的环境为Linux Ubuntu 14.4系统。

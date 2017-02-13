@@ -2,7 +2,7 @@
 layout: post
 title:  "First Blog"
 date:   2015-08-21 16:29:15
-categories: technology
+categories: Others
 ---
 what?
 

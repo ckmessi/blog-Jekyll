@@ -2,7 +2,8 @@
 layout: post
 title:  "LeetCode 187: Repeated DNA Sequences"
 date:   2015-10-27 19:36:00
-categories: coding
+categories: LeetCode
+tags: [LeetCode, Encoding]
 ---
 
 这道Repeated DNA Sequences挺有意思，其实很简单，但是少数几道以MLE为限制的题目。  

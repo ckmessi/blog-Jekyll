@@ -2,7 +2,8 @@
 layout: post
 title:  "LeetCode 49: Group Anagrams"
 date:   2015-10-28 20:54:00
-categories: coding
+categories: LeetCode
+tags: [LeetCode, Hash]
 ---
 
 这道Group Anagrams不难，但其中的一些技巧还是值得记录的。

@@ -2,8 +2,8 @@
 layout: post
 title:  "LeetCode 307: Range Sum Query - Mutable"
 date:   2015-12-22 22:04:00
-categories: coding
-tags: LeetCode, DataStructure
+categories: LeetCode
+tags: [LeetCode, Data Structure]
 ---
 
 ###区间和问题

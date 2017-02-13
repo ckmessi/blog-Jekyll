@@ -1,0 +1,83 @@
+---
+layout: default
+---
+
+<div class="home">
+  <br>
+  <div class="row">
+    <div class="col-md-2"></div>
+    <div class="col-md-7">
+      <h1 class="page-heading"></h1>
+      <ul class="post-list">
+        
+      </ul>
+    </div>
+    <div class="col-md-3">
+      <div class="side-tag">
+        
+      </div>
+    </div>
+  </div>
+  
+  <!--
+  <p class="rss-subscribe">subscribe <a href="{{ "/feed.xml" | prepend: site.baseurl }}">via RSS</a></p>
+  -->
+</div>
+
+<script>
+  
+  // tag栏内容
+  buildSideTag();  
+  function fetchTagData () {
+    var tagDataStr = '{ {% for tag in site.tags %}{% if tag[0] != site.tags.first[0] %},{% endif %}"{{ tag[0] }}":[{% for post in tag[1] %}{% if post != tag[1].first %},{% endif %}{"url":"{{post.url}}", "title":"{{post.title}}", "date":"{{post.date | date:"%d/%m/%Y"}}"}{% endfor %}]{% endfor %} }';
+    var tagData = JSON.parse(tagDataStr);
+    return tagData;
+  }
+  function buildSideTag(){
+    var tagData = fetchTagData();
+    for(tag in tagData){
+      var tagButtonHtml = '<div class="tag-btn"><a href="{{site.baseurl}}/archive/?tag=' + tag +'" class="btn btn-info">' + tag + ' ( ' + tagData[tag].length + ' )' +'</a></div>';
+      $('.side-tag').append(tagButtonHtml);
+    }
+  }
+  function fetchCategoryData(){
+    var categoryDataStr = '{ {% for category in site.categories %}{% if category[0] != site.categories.first[0] %},{% endif %}"{{ category[0] }}":[{% for post in category[1] %}{% if post != category[1].first %},{% endif %}{"url":"{{post.url}}", "title":"{{post.title}}", "date":"{{post.date | date:"%d/%m/%Y"}}"}{% endfor %}]{% endfor %} }';
+    var categoryData = JSON.parse(categoryDataStr);
+    return categoryData;
+  }
+
+  // 文章列表
+  buildArticleList();
+  function buildArticleList(){
+    // 可能有两种可能 tag或category
+    var tagName = getQueryString('tag');
+    if(tagName != null && tagName != ""){
+      $('.page-heading').html('标签：' + tagName);
+      var tagData = fetchTagData();
+      for(post in tagData[tagName]){
+        var postTitleHtml = '<li><span class="post-meta">' + tagData[tagName][post].date + '</span><h2><a class="post-link" href="' + '{ {site.baseurl} }' + tagData[tagName][post].date.url + '">' + tagData[tagName][post].title + '</a></h2></li>';
+
+        $('.post-list').append(postTitleHtml);
+      }
+    }
+    else{
+      var categoryName = getQueryString('category');
+      if(categoryName != null && categoryName != ""){
+        $('.page-heading').html('分类：' + categoryName);
+        var categoryData = fetchCategoryData();
+        for(post in categoryData[categoryName]){
+          var postTitleHtml = '<li><span class="post-meta">' + categoryData[categoryName][post].date + '</span><h2><a class="post-link" href="' + '{ {site.baseurl} }' + categoryData[categoryName][post].date.url + '">' + categoryData[categoryName][post].title + '</a></h2></li>';
+
+          $('.post-list').append(postTitleHtml);
+        }
+      }
+    }
+  }
+  function getQueryString(name)
+  {
+    var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");
+    var r = window.location.search.substr(1).match(reg);
+    if(r!=null)return  unescape(r[2]); return null;
+  }
+
+</script>

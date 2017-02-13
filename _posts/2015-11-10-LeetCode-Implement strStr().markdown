@@ -2,8 +2,8 @@
 layout: post
 title:  "LeetCode 28: Implement strStr()"
 date:   2015-11-10 21:16:00
-categories: coding
-tags: String
+categories: LeetCode
+tags: [LeetCode, String]
 ---
 
 在一个字符串中，查找另外一个字符串的位置。

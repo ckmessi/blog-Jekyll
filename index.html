@@ -3,26 +3,49 @@ layout: default
 ---
 
 <div class="home">
-
-  
-
-
   <br>
-
-  <h1 class="page-heading">最近更新</h1>
-  <ul class="post-list">
-    {% for post in site.posts %}
-      <li>
-        <span class="post-meta">{{ post.date | date: "%b %-d, %Y" }}</span>
-        <h2>
-          <a class="post-link" href="{{ post.url | prepend: site.baseurl }}">{{ post.title }}</a>
-        </h2>
-      </li>
-    {% endfor %}
-  </ul>
-
+  <div class="row">
+    <div class="col-md-2"></div>
+    <div class="col-md-7">
+      <h1 class="page-heading">最近更新</h1>
+      <ul class="post-list">
+        {% for post in site.posts %}
+          <li>
+            <span class="post-meta">{{ post.date | date: "%b %-d, %Y" }}</span>
+            <h2>
+              <a class="post-link" href="{{ post.url | prepend: site.baseurl }}">{{ post.title }}</a>
+            </h2>
+          </li>
+        {% endfor %}
+      </ul>
+    </div>
+    <div class="col-md-3">
+      <div class="side-tag">
+        
+      </div>
+    </div>
+  </div>
+  
   <!--
   <p class="rss-subscribe">subscribe <a href="{{ "/feed.xml" | prepend: site.baseurl }}">via RSS</a></p>
   -->
-
 </div>
+
+<script>
+
+  buildSideTag();
+  
+  function fetchTagData () {
+    var tagDataStr = '{ {% for tag in site.tags %}{% if tag[0] != site.tags.first[0] %},{% endif %}"{{ tag[0] }}":[{% for post in tag[1] %}{% if post != tag[1].first %},{% endif %}{"url":"{{post.url}}", "title":"{{post.title}}", "date":"{{post.date | date:"%d/%m/%Y"}}"}{% endfor %}]{% endfor %} }';
+    var tagData = JSON.parse(tagDataStr);
+    return tagData;
+  }
+  function buildSideTag(){
+    var tagData = fetchTagData();
+    for(tag in tagData){
+      var tagButtonHtml = '<div class="tag-btn"><a href="{{site.baseurl}}/archive/?tag=' + tag +'" class="btn btn-info">' + tag + ' ( ' + tagData[tag].length + ' )' +'</a></div>';
+      $('.side-tag').append(tagButtonHtml);
+    }
+  }
+
+</script>

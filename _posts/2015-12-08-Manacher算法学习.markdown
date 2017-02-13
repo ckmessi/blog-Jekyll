@@ -2,8 +2,8 @@
 layout: post
 title:  "Manacher算法学习"
 date:   2015-12-08 22:32:00
-categories: coding
-tags: Algorithm
+categories: LeetCode
+tags: [LeetCode, Algorithm, String]
 ---
 
 Manacher算法是在O(n)时间复杂度内，在给定字符串中找到最大长度回文子串的算法。

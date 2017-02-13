@@ -1,0 +1,27 @@
+
+.site-nav{
+	float: left;
+}
+.menu-nav{
+	float: left;
+	margin-left: 20px;
+}
+.trigger{
+	margin-left: 20px;
+	float: right;
+}
+
+.side-tag{
+	margin-top: 100px;
+	padding-top: 5px;
+	padding-bottom: 5px;
+	min-height: 300px;
+}
+
+.tag-btn{
+	margin-left: 10px;
+	margin-top: 10px;
+}
+.tag-btn a{
+	color: #ffffff;
+}

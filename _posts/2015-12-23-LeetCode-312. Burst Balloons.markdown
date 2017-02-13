@@ -2,7 +2,7 @@
 layout: post
 title:  "LeetCode 312: Burst Ballons"
 date:   2015-12-23 21:56:00
-categories: coding
+categories: LeetCode
 tags: [LeetCode, Dynamic Programming]
 ---
 

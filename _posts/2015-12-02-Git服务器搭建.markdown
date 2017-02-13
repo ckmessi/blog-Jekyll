@@ -2,8 +2,8 @@
 layout: post
 title:  "Git服务器搭建"
 date:   2015-12-02 21:54:00
-categories: coding
-tags: Git
+categories: Others
+tags: [Git]
 ---
 
 ##Git服务器的搭建

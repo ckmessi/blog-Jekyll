@@ -2,8 +2,8 @@
 layout: post
 title:  "LeetCode 174: Dungeon Game"
 date:   2015-12-15 21:19:00
-categories: coding
-tags: LeetCode DynamicProgramming
+categories: LeetCode
+tags: [LeetCode, Dynamic Programming]
 ---
 
 ###地牢游戏
