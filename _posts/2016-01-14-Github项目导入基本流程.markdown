@@ -6,7 +6,7 @@ categories: Others
 tags: [Git]
 ---
 
-##Github项目导入  
+## Github项目导入  
 
 与普通Git使用类似，现在使用Github作为远程仓库，基本方法及流程如下：    
 
