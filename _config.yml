@@ -8,3 +8,5 @@ url: "http://github.ckmessi.io" # the base hostname & protocol for your site
 github_username:  ckmessi
 # Build settings
 markdown: kramdown
+
+theme: jekyll-theme-cayman
